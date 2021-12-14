@@ -6,10 +6,63 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class MyWidget(QMainWindow):
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(622, 545)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setGeometry(QtCore.QRect(50, 110, 521, 371))
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(50, 9, 521, 41))
+        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pushButton_3 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.horizontalLayout.addWidget(self.pushButton_3)
+        self.pushButton_2 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.pushButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton.setObjectName("pushButton")
+        self.horizontalLayout.addWidget(self.pushButton)
+        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit.setGeometry(QtCore.QRect(72, 70, 501, 22))
+        self.lineEdit.setObjectName("lineEdit")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(50, 70, 21, 21))
+        self.label.setObjectName("label")
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 622, 26))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.pushButton_3.setText(_translate("MainWindow", "Загрузить"))
+        self.pushButton_2.setText(_translate("MainWindow", "Изменить"))
+        self.pushButton.setText(_translate("MainWindow", "Добавить"))
+        self.label.setText(_translate("MainWindow", "ID:"))
+
+class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("addEditCoffeeForm.ui", self)
+        self.setupUi(self)
+        self.setWindowTitle('Выберите действие')
         self.con = sqlite3.connect("espresso.db")
         self.pushButton_3.clicked.connect(self.update_result)
         self.tableWidget.itemChanged.connect(self.item_changed)
@@ -167,22 +220,19 @@ class MyWidget2(QMainWindow, Ui_SmallWindow):
         self.label.setText('')
 
     def start(self):
-        try:
-            with sqlite3.connect('espresso.db') as con:
-                cur_ = con.cursor()
-                if self.lineEdit_3.text() != '' and self.lineEdit_4.text() != '' and self.lineEdit_5.text() != '' and \
-                        self.lineEdit_6.text() != '' and self.lineEdit_7.text() != '' and self.lineEdit.text() != '':
-                    cur_.execute("""INSERT INTO ingredient(name_sort, Step_obg, grind_grains, taste_discription, 
-                    Price, Packing_volume) VALUES(?, ?, ?, ?, ?, ?)""", (self.lineEdit_3.text(),
-                                                                         self.lineEdit_4.text(),
-                                                                         self.lineEdit.text(),
-                                                                         self.lineEdit_6.text(),
-                                                                         self.lineEdit_7.text(),
-                                                                         self.lineEdit_5.text()))
-                else:
-                    self.label.setText('Неверный формат')
-        except Exception as e:
-            print(e)
+        with sqlite3.connect('espresso.db') as con:
+            cur_ = con.cursor()
+            if self.lineEdit_3.text() != '' and self.lineEdit_4.text() != '' and self.lineEdit_5.text() != '' and \
+                    self.lineEdit_6.text() != '' and self.lineEdit_7.text() != '' and self.lineEdit.text() != '':
+                cur_.execute("""INSERT INTO ingredient(name_sort, Step_obg, grind_grains, taste_discription, 
+                Price, Packing_volume) VALUES(?, ?, ?, ?, ?, ?)""", (self.lineEdit_3.text(),
+                                                                     self.lineEdit_4.text(),
+                                                                     self.lineEdit.text(),
+                                                                     self.lineEdit_6.text(),
+                                                                     self.lineEdit_7.text(),
+                                                                     self.lineEdit_5.text()))
+            else:
+                self.label.setText('Неверный формат')
 
 
 if __name__ == "__main__":
